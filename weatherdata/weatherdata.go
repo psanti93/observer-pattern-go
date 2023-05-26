@@ -13,6 +13,14 @@ func (w *WeatherData) RegisterObserver(observer interfaces.Observer) {
 	w.Observers = append(w.Observers, observer)
 }
 
+func (w *WeatherData) RemoveObserver(observer interfaces.Observer) {
+	for i, observer := range w.Observers {
+		if w.Observers[i] == observer {
+			w.Observers[i] = nil
+		}
+	}
+}
+
 func (w *WeatherData) NotifyObservers() {
 	for _, observer := range w.Observers {
 		observer.Update()
