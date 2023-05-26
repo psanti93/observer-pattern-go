@@ -1,7 +1,7 @@
 package main
 
 import (
-	currentDisplay "github.com/psanti93/observer-pattern-go/displays"
+	display "github.com/psanti93/observer-pattern-go/displays"
 	weatherData "github.com/psanti93/observer-pattern-go/weatherdata"
 )
 
@@ -9,12 +9,19 @@ func main() {
 
 	weatherData := &weatherData.WeatherData{}
 
-	currentDisplay := &currentDisplay.CurrentDisplay{
+	currentDisplay := &display.CurrentDisplay{
+		WeatherData: weatherData,
+	}
+
+	forecastDisplay := &display.Forecast{
 		WeatherData: weatherData,
 	}
 
 	weatherData.RegisterObserver(currentDisplay)
-	weatherData.SetMeasurements(30, 60, 80)
-	weatherData.SetMeasurements(20, 90, 100)
+	weatherData.RegisterObserver(forecastDisplay)
+
+	weatherData.SetMeasurements(100, 90, 80)
+	weatherData.SetMeasurements(60, 65, 100)
+	weatherData.SetMeasurements(45, 40, 100)
 
 }
