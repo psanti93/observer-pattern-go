@@ -1,62 +1,20 @@
 package main
 
-import "fmt"
-
-type Subject interface {
-	RegisterObserver(observer Observer)
-	NotifyObservers()
-}
-
-type Observer interface {
-	Update()
-}
-
-type Displace interface {
-	Display()
-}
-
-type WeatherData struct {
-	Observers   []Observer
-	Temperature int
-	Humidity    int
-	Pressure    int
-}
-
-func (w *WeatherData) RegisterObserver(observer Observer) {
-	w.Observers = append(w.Observers, observer)
-}
-
-func (w *WeatherData) NotifyObservers() {
-	for _, observer := range w.Observers {
-		observer.Update()
-	}
-}
-
-type CurrentDisplay struct {
-	WeatherData *WeatherData
-}
-
-func (c *CurrentDisplay) Display() {
-	fmt.Printf("The Current forecast for today is %d degrees with %d humidity", c.WeatherData.Temperature, c.WeatherData.Humidity)
-}
-
-func (c *CurrentDisplay) Update() {
-	c.Display()
-}
+import (
+	currentDisplay "github.com/psanti93/observer-pattern-go/displays"
+	weatherData "github.com/psanti93/observer-pattern-go/weatherdata"
+)
 
 func main() {
 
-	weatherData := &WeatherData{
-		Temperature: 60,
-		Humidity:    30,
-		Pressure:    20,
-	}
+	weatherData := &weatherData.WeatherData{}
 
-	currentDisplay := &CurrentDisplay{
+	currentDisplay := &currentDisplay.CurrentDisplay{
 		WeatherData: weatherData,
 	}
 
 	weatherData.RegisterObserver(currentDisplay)
-	weatherData.NotifyObservers()
+	weatherData.SetMeasurements(30, 60, 80)
+	weatherData.SetMeasurements(20, 90, 100)
 
 }
